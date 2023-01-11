@@ -315,6 +315,39 @@ function Python_Check()
     return 'True'
 }
 
+<# Install STM32CubeProgrammer #>
+function STM32CubeProg_Install()
+{
+    $downloadsFolder    = (Get-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders").PSObject.Properties["{374DE290-123F-4565-9164-39C4925E467B}"].Value
+    $cubeprog_zip = "$downloadsFolder\$ZIP_STM32_CUBE_PROG"
+
+    if (!(Test-Path $cubeprog_zip))
+    {
+        Write-Host "Downloading $ZIP_STM32_CUBE_PROG"
+        Start-Process -Wait $URL_LINK_STM32_CUBE_PROG
+
+        while (!(Test-Path "$cubeprog_zip")) 
+        {
+             Start-Sleep 10 
+        }
+    }
+
+    $cubeprog_installer = "$PATH_TOOLS\$INSTALLER_STM32_CUBE_PROG"
+
+    if (!(Test-Path $cubeprog_installer))
+    {
+        Write-Host "Extracting $ZIP_STM32_CUBE_PROG"
+        Expand-Archive "$cubeprog_zip" "$PATH_TOOLS"
+    }
+
+    Write-Host "Installing $Required_Version_STM32CubeProgrammer"
+
+    Start-Process -Wait -FilePath  $cubeprog_installer
+
+    # Refresh envirement variables
+    refresh_envirement_variables  
+}
+
 <# Check STM32CubeProgrammer is installed #>
 function STM32CubeProg_Check()
 {
