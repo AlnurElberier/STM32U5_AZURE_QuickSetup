@@ -407,98 +407,98 @@ Write-Output "$privacy"
 # Refresh envirement variables
 refresh_envirement_variables
 
-# # Check if PC is connected to Internet
-# $connection_status = Internet_Connection_Check
+# Check if PC is connected to Internet
+$connection_status = Internet_Connection_Check
 
-# if(!($connection_status -like 'True'))
-# {
-#     Write-Output "You are not connected to Internet. Please connect to Internet and run the script again" | Red
-#     Start-Sleep -Seconds 2
-#     Exit 1
-# }
+if(!($connection_status -like 'True'))
+{
+    Write-Output "You are not connected to Internet. Please connect to Internet and run the script again" | Red
+    Start-Sleep -Seconds 2
+    Exit 1
+}
 
-# Write-Output "You are connected to Internet."  | Green
+Write-Output "You are connected to Internet."  | Green
 
-# # Create tools directory
-# $value = ToolsDir_Create
+# Create tools directory
+$value = ToolsDir_Create
 
 # Check if X-CUBE-AZURE is installed
 $value = FIRMWARE_Check
 
-# # Check if STM32CubeProg_Check is installed
-# $value = STM32CubeProg_Check
+# Check if STM32CubeProg_Check is installed
+$value = STM32CubeProg_Check
 
-# if(!($value -like 'True'))
-# {
-#     Write-Output "STM32CubeProgrammer version error"  | Red
-#     Write-Output "Required version : $Required_Version_STM32CubeProgrammer"
-#     Write-Output "please Uninstall STM32CubeProgrammer and run the script again"
+if(!($value -like 'True'))
+{
+    Write-Output "STM32CubeProgrammer version error"  | Red
+    Write-Output "Required version : $Required_Version_STM32CubeProgrammer"
+    Write-Output "please Uninstall STM32CubeProgrammer and run the script again"
 
-#     Start-Sleep -Seconds 5
-#     Exit 1
-# }
+    Start-Sleep -Seconds 5
+    Exit 1
+}
 
-# Write-Output "STM32CubeProgrammer version OK"   | Green
+Write-Output "STM32CubeProgrammer version OK"   | Green
 
-# $value = Python_Check
+$value = Python_Check
 
-# if(!($value -like 'True'))
-# {
-#     Write-Output "Python version error"  | Red
-#     Write-Output "Required version : $Required_Version_Python"
-#     Write-Output "please Uninstall Python and run the script again"
+if(!($value -like 'True'))
+{
+    Write-Output "Python version error"  | Red
+    Write-Output "Required version : $Required_Version_Python"
+    Write-Output "please Uninstall Python and run the script again"
 
-#     Start-Sleep -Seconds 5
-#     Exit 1
-# }
+    Start-Sleep -Seconds 5
+    Exit 1
+}
 
-# Write-Output "Python version OK"   | Green
+Write-Output "Python version OK"   | Green
 
-# Python_Pip_Check
+Python_Pip_Check
 
-# Python_Modules_Install
+Python_Modules_Install
 
-# $value = AZCLI_Check
+$value = AZCLI_Check
 
-# if(!($value -like 'True'))
-# {
-#     Write-Output "AZCLI version error"  | Red
-#     Write-Output "Required version : $Required_Version_AZCLI"
-#     Write-Output "please Uninstall AZCLI and run the script again"
+if(!($value -like 'True'))
+{
+    Write-Output "AZCLI version error"  | Red
+    Write-Output "Required version : $Required_Version_AZCLI"
+    Write-Output "please Uninstall AZCLI and run the script again"
 
-#     Start-Sleep -Seconds 5
-#     Exit 1
-# }
+    Start-Sleep -Seconds 5
+    Exit 1
+}
 
-# Write-Output "AZCLI version OK" | Green
+Write-Output "AZCLI version OK" | Green
 
-# $value = AZCLI_Extensions_Install
+$value = AZCLI_Extensions_Install
 
-# if(!($value -like 'True'))
-# {
-#     Write-Output "Issue installing AZ extensions"  | Red
-#     Start-Sleep -Seconds 5
-#     Exit 1
-# }
+if(!($value -like 'True'))
+{
+    Write-Output "Issue installing AZ extensions"  | Red
+    Start-Sleep -Seconds 5
+    Exit 1
+}
 
-# Write-Output "System check successful" | Green
-# Exit 0
+Write-Output "System check successful" | Green
+Exit 0
 
-# # Locgin to Azure account
-# $value = AZCLI_Login
+# Locgin to Azure account
+$value = AZCLI_Login
 
-# if(!($value -like 'True'))
-# {
-#     Write-Output "AZCLI login error. Please run the script again and try to login again"   | Red
+if(!($value -like 'True'))
+{
+    Write-Output "AZCLI login error. Please run the script again and try to login again"   | Red
 
-#     Start-Sleep -Seconds 5
-#     Exit 1
-# }
+    Start-Sleep -Seconds 5
+    Exit 1
+}
 
-# Write-Output "Successful AZ login" | Green
+Write-Output "Successful AZ login" | Green
 
-# & python .\scripts\configureJson.py
+& python .\scripts\configureJson.py
 
-# Start-Process $PATH_FIRMWARE
+Start-Process $PATH_FIRMWARE
 
 Exit 0
