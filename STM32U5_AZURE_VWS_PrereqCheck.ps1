@@ -85,8 +85,6 @@ function Cleanup()
 <# Clone iot-reference-stm32u5 #>
 function FIRMWARE_Install()
 {
-    Write-Host "Here"
-
     $downloadsFolder    = (Get-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders").PSObject.Properties["{374DE290-123F-4565-9164-39C4925E467B}"].Value
     $firmware_zip       = "$downloadsFolder\$ZIP_X_CUBE_AZURE"
 
