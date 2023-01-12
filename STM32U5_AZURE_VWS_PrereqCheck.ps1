@@ -62,6 +62,24 @@ function Internet_Connection_Check
     return Test-Connection -ComputerName www.st.com -Quiet
 }
 
+<# Check the default broswer setting #>
+function Browser_Check()
+{
+    $default_browser = (Get-ItemProperty HKCU:\Software\Microsoft\Windows\Shell\Associations\UrlAssociations\http\UserChoice -Name ProgId).ProgId
+
+    if(($default_browser -eq "MSEdgeHTM") -or ($default_browser -eq "ChromeHTML") )
+    {
+        #Write-Output "Microsoft Edge or Chrome set as default browswer"
+
+        return "True"
+    }
+
+    #Write-Host "Browswer set to $default_browser"
+
+    return "False"
+}
+
+
 <# Create tools directory #>
 function ToolsDir_Create()
 {
@@ -416,6 +434,19 @@ if(!($connection_status -like 'True'))
 }
 
 Write-Output "You are connected to Internet."  | Green
+
+# Check default browser
+$browser_status = Browser_Check
+
+if(!($browser_status -like 'True'))
+{
+    Write-Output "Please set Microsoft Edge or Chrome as default browswer then run the script again" | Red
+    Start-Sleep -Seconds 2
+    Start-Process $URL_LINK_DEFULT_SETTING
+    Exit 1
+}
+
+Write-Output "Default browswer OK"   | Green
 
 # Create tools directory
 $value = ToolsDir_Create
