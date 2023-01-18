@@ -85,7 +85,7 @@ Enter **y** to accept the Execution Policy Change
 
 Navigate to the directory where you have cloned this repo to. 
 ```
-cd C:\<Your directory>\STM32U5_AWS_Virtual_Workshop_2023
+cd C:\<Your directory>\STM32U5_AZURE_Virtual_Workshop_2023
 ```
 
 ![Navigate](./assets/Navigate.jpg)
@@ -96,7 +96,7 @@ cd C:\<Your directory>\STM32U5_AWS_Virtual_Workshop_2023
 Type .\STM32U5_AZURE_VWS_PrereqCheck.ps1 to run the prerequisite check script
 
 ```
-.\STM32U5_Azure_VWS_PrereqCheck.ps1
+.\STM32U5_AZURE_VWS_PrereqCheck.ps1
 ```
 
 ![RunScript](./assets/RunScript.jpg)
@@ -124,6 +124,6 @@ Questions and support ahead of the workshop
 -	If you have issues during the software download and install, please contact ST by entering an Online Support Request at: https://community.st.com/s/onlinesupport?o=ws&tabset-08cae=2 
 to help resolve the issue.
 
--	When entering the support request, in the Subject field please fill with: “STM32U5 AWS Virtual workshop”.
+-	When entering the support request, in the Subject field please fill with: “STM32U5 Azure Virtual workshop”.
 
 To ensure your request is quickly routed to the correct support team, please indicate the Workshop Request Type, Technical or Non-Technical, that best describes your question.
