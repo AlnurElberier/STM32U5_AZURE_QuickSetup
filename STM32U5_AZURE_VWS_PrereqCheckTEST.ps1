@@ -313,7 +313,7 @@ foreach($download in $downloads)
         
 
         if (Test-Path -Path "$PATH_DOWNLOAD") {
-            Write-Host "Extracting " $download.Name -ForegroundColor Yellow
+            Write-Host "Extracting " $download.Name " to " $download.destination -ForegroundColor Yellow
             Expand-Archive "$PATH_DOWNLOAD"  -DestinationPath $download.destination
         }
         else 
