@@ -346,13 +346,27 @@ foreach($download in $downloads)
 }
 
 if ($WS_DATE -eq (Get-Date -UFormat "%m/%d/%y")) {
-    Write-Host "Workshop Today"
+
+    $WS_CONFIG_PATH = .\STM32U5_AZURE_Virtual_Workshop_Config\
+    $ws_tenant_id = "aedf9cbb-56df-47c5-82a7-9a57071cab8e"
 
     & git clone https://github.com/AlnurElberier/STM32U5_AZURE_Virtual_Workshop_Config.git
 
-    $CREDS = Get-Content .\STM32U5_AZURE_Virtual_Workshop_Config\credentials.json | Out-String | ConvertFrom-Json
+    $CREDS = Get-Content $WS_CONFIG_PATH+"credentials.json" | Out-String | ConvertFrom-Json
 
-    & az login --username CREDS.email --password CREDS.password |  Out-String | Set-Content .\STM32U5_AZURE_Virtual_Workshop_Config\az_login.json
+    & az login --username $CREDS.email --password $CREDS.password |  Out-String | Set-Content $WS_CONFIG_PATH+"az_login.json"
+
+    & notepad $WS_CONFIG_PATH+"credentials.json"
+
+    if($login_info.tenantId -eq $ws_tenant_id)
+    {
+        Write-Host "OK :Azure Command Line Login Successful"  -ForegroundColor Green
+    }
+    
+    & python $WS_CONFIG_PATH+"configureJson.py"
+}
+
+
 }
 
 Write-Host "OK : System check successful !"  -ForegroundColor Green
