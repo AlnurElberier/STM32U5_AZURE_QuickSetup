@@ -362,11 +362,14 @@ if ($WS_DATE -eq (Get-Date -UFormat "%m/%d/%y")) {
     {
         Write-Host "OK :Azure Command Line Login Successful"  -ForegroundColor Green
     }
-    
+    else 
+    {
+        Write-Host "ERROR: Azure Login Failed" -ForegroundColor Red
+        Exit 1
+    }
+    Write-Host "Configuring JSON File"  -ForegroundColor Yellow
     & python $WS_CONFIG_PATH+"configureJson.py"
-}
-
-
+    
 }
 
 Write-Host "OK : System check successful !"  -ForegroundColor Green
