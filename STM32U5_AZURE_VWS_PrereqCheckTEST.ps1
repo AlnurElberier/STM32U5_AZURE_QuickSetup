@@ -233,9 +233,9 @@ function AZCLI_Login_Check()
 {
     if ($WS_DATE -eq (Get-Date -UFormat "%m/%d/%y")) {
 
-        & az login |  Out-String | Set-Content .\scripts\az_login.json
-        
         & notepad .\scripts\credentials.txt
+
+        & az login |  Out-String | Set-Content .\scripts\az_login.json
 
         $login_info = Get-Content .\scripts\az_login.json
 
@@ -248,7 +248,7 @@ function AZCLI_Login_Check()
             Write-Host "ERROR: Azure Login Failed" -ForegroundColor Red
             return 'False'
         }
-        
+
         Write-Host "Configuring JSON File"  -ForegroundColor Yellow
         & python .\scripts\configureJson.py
     }
