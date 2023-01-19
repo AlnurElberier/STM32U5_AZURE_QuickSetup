@@ -307,13 +307,13 @@ foreach($download in $downloads)
     if (!(Test-Path -Path "$PATH_FIRMWARE"))
     {
         if (!(Test-Path -Path "$PATH_DOWNLOAD")) {
-            Write-Host "Downloading " $repo.Name  -ForegroundColor Yellow
+            Write-Host "Downloading " $download.Name  -ForegroundColor Yellow
             Invoke-WebRequest $download.URL -OutFile $PATH_DOWNLOAD
         }
         
 
         if (Test-Path -Path "$PATH_DOWNLOAD") {
-            Write-Host "Extracting " $repo.Name -ForegroundColor Yellow
+            Write-Host "Extracting " $download.Name -ForegroundColor Yellow
             Expand-Archive "$PATH_DOWNLOAD"  -DestinationPath $download.destination
         }
         else 
