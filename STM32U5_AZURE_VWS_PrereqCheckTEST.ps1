@@ -66,6 +66,8 @@ $downloads = @(
 
 $PATH_TOOLS = ".\tools"
 
+$ws_tenant_id = "aedf9cbb-56df-47c5-82a7-9a57071cab8e"
+
 <# Check if PC is connected to internet #>
 function Internet_Connection_Check()
 {
@@ -227,6 +229,36 @@ function AZCLI_Extensions_Install()
   return 'True'
 }
 
+function AZCLI_Login_Check()
+{
+    if ($WS_DATE -eq (Get-Date -UFormat "%m/%d/%y")) {
+
+        & az login |  Out-String | Set-Content .\scripts\az_login.json
+        
+        & notepad .\scripts\credentials.txt
+
+        $login_info = Get-Content .\scripts\az_login.json
+
+        if($login_info.tenantId -eq $ws_tenant_id)
+        {
+            Write-Host "OK :Azure Command Line Login Successful"  -ForegroundColor Green
+        }
+        else 
+        {
+            Write-Host "ERROR: Azure Login Failed" -ForegroundColor Red
+            return 'False'
+        }
+        
+        Write-Host "Configuring JSON File"  -ForegroundColor Yellow
+        & python .\scripts\configureJson.py
+    }
+    else
+    {
+        return 'True'
+    }
+
+}
+
 <#######################################################  
 
                      Script start 
@@ -345,32 +377,8 @@ foreach($download in $downloads)
     }   
 }
 
-if ($WS_DATE -eq (Get-Date -UFormat "%m/%d/%y")) {
-
-    $WS_CONFIG_PATH = .\STM32U5_AZURE_Virtual_Workshop_Config\
-    $ws_tenant_id = "aedf9cbb-56df-47c5-82a7-9a57071cab8e"
-
-    & git clone https://github.com/AlnurElberier/STM32U5_AZURE_Virtual_Workshop_Config.git
-
-    $CREDS = Get-Content $WS_CONFIG_PATH+"credentials.json" | Out-String | ConvertFrom-Json
-
-    & az login --username $CREDS.email --password $CREDS.password |  Out-String | Set-Content $WS_CONFIG_PATH+"az_login.json"
-
-    & notepad $WS_CONFIG_PATH+"credentials.json"
-
-    if($login_info.tenantId -eq $ws_tenant_id)
-    {
-        Write-Host "OK :Azure Command Line Login Successful"  -ForegroundColor Green
-    }
-    else 
-    {
-        Write-Host "ERROR: Azure Login Failed" -ForegroundColor Red
-        Exit 1
-    }
-    Write-Host "Configuring JSON File"  -ForegroundColor Yellow
-    & python $WS_CONFIG_PATH+"configureJson.py"
-    
-}
+#Attempt to login and check credentials
+AZCLI_Login_Check
 
 Write-Host "OK : System check successful !"  -ForegroundColor Green
 
