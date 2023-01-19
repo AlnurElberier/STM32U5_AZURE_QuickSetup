@@ -352,9 +352,7 @@ if ($WS_DATE -eq (Get-Date -UFormat "%m/%d/%y")) {
 
     $CREDS = Get-Content .\STM32U5_AZURE_Virtual_Workshop_Config\credentials.json | Out-String | ConvertFrom-Json
 
-    Write-Host $CREDS.email
-    Write-Host $CREDS.password
-    
+    & az login --username CREDS.email --password CREDS.password |  Out-String | Set-Content .\STM32U5_AZURE_Virtual_Workshop_Config\az_login.json
 }
 
 Write-Host "OK : System check successful !"  -ForegroundColor Green
