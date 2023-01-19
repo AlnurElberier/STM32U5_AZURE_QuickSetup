@@ -21,6 +21,8 @@ $copyright      = "Copyright (c) 2022 STMicroelectronics."
 $about          = "STM32U5 Azure Virtual Workshop 2023 prerequisite check"
 $privacy        = "The script doesn't collect or share any data"
 
+$WS_DATE    = "01/19/23"
+
 $softwares =  @(
     [pscustomobject]@{Name="Python*Core Interpreter";
                       MinVersion=[System.Version]"3.11.1"; 
@@ -55,9 +57,6 @@ $softwares =  @(
 )
 
 $downloads = @(
-    <#[pscustomobject]@{Name="STM32U5_AWS_QuickConnect";
-    URL="https://github.com/SlimJallouli/STM32U5_AWS_QuickConnect.git";}#>
-
     [pscustomobject]@{Name="en.x-cube-azure_v2-1-0.zip";
     URL="https://stm32iot.blob.core.windows.net/firmware/en.x-cube-azure_v2-1-0.zip";
     SRC_URL="https://www.st.com/en/embedded-software/x-cube-azure.html#get-software";
@@ -164,21 +163,12 @@ function Get-SoftwareInstaller($software)
 {
     if($software.ZIP)
     {
-        # $downloadsFolder    = (Get-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders").PSObject.Properties["{374DE290-123F-4565-9164-39C4925E467B}"].Value
-        # $zip_file = "$downloadsFolder\"+$software.ZIP
-        # $url = $software.URL
         $zip_file =  $PATH_TOOLS+"\"+$software.ZIP
 
         if (!(Test-Path $zip_file))
         {
             Write-Host "Downloading : "$software.ZIP
-            # Start-Process $url
             Invoke-WebRequest $software.URL -OutFile $zip_file
-    
-            # while (!(Test-Path "$zip_file")) 
-            # {
-            #      Start-Sleep 3 
-            # }
         }
 
         $installer = "$PATH_TOOLS\"+$software.Installer
@@ -214,6 +204,26 @@ function Get-SoftwareInstaller($software)
 
     # Refresh envirement variables
     refresh_envirement_variables
+}
+
+<# Install AZCLI extensions #>
+function AZCLI_Extensions_Install()
+{
+    Write-Output "Installing AZ extensions"
+
+  try 
+  {
+    & az extension add --name azure-iot 
+    & az extension update --name azure-iot
+    & az extension add --name account
+    & az extension update --name account
+  }
+  catch
+  {
+    return 'False'
+  }
+
+  return 'True'
 }
 
 <#######################################################  
@@ -298,6 +308,10 @@ Python_Pip_Check
 # Install Python modules
 Python_Modules_Install
 
+# Install Azure CLI Extensions
+AZCLI_Extensions_Install
+
+
 # Clone the repos
 foreach($download in $downloads)
 {
@@ -328,6 +342,10 @@ foreach($download in $downloads)
     {
         Write-Host "OK :" $download.Name  -ForegroundColor Green
     }   
+}
+
+if ($WS_DATE -eq (Get-Date -UFormat "%m/%d/%y")) {
+    Write-Host "Workshop Today"
 }
 
 Write-Host "OK : System check successful !"  -ForegroundColor Green
