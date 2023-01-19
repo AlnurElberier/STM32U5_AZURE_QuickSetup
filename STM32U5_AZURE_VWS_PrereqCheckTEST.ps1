@@ -61,7 +61,7 @@ $downloads = @(
     Zip="en.x-cube-azure_v2-1-0.zip"
     URL="https://stm32iot.blob.core.windows.net/firmware/en.x-cube-azure_v2-1-0.zip";
     SRC_URL="https://www.st.com/en/embedded-software/x-cube-azure.html#get-software";
-    Destination="C:\.";}    
+    Destination="C:\";}    
 )
 
 $PATH_TOOLS = ".\tools"
