@@ -57,7 +57,8 @@ $softwares =  @(
 )
 
 $downloads = @(
-    [pscustomobject]@{Name="en.x-cube-azure_v2-1-0.zip";
+    [pscustomobject]@{Name="STM32CubeExpansion_Cloud_AZURE_V2.1.0";
+    Zip="en.x-cube-azure_v2-1-0.zip"
     URL="https://stm32iot.blob.core.windows.net/firmware/en.x-cube-azure_v2-1-0.zip";
     SRC_URL="https://www.st.com/en/embedded-software/x-cube-azure.html#get-software";
     Destination="C:\.";}    
@@ -316,7 +317,7 @@ AZCLI_Extensions_Install
 foreach($download in $downloads)
 {
     $PATH_FIRMWARE= $download.Destination+$download.Name
-    $PATH_DOWNLOAD=  $PATH_TOOLS+"\"+$download.Name
+    $PATH_DOWNLOAD=  $PATH_TOOLS+"\"+$download.Zip
 
     if (!(Test-Path -Path "$PATH_FIRMWARE"))
     {
