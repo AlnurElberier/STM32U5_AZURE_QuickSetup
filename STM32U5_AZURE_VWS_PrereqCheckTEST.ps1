@@ -223,7 +223,8 @@ function AZCLI_Extensions_Install()
   }
   catch
   {
-    return 'False'
+    Write-Host "ERROR: Azure Command Line Extension Install Fail" -ForegroundColor Red
+    Exit 1
   }
 
   return 'True'
@@ -246,7 +247,7 @@ function AZCLI_Login_Check()
         else 
         {
             Write-Host "ERROR: Azure Login Failed" -ForegroundColor Red
-            return 'False'
+            Exit 1
         }
 
         Write-Host "Configuring JSON File"  -ForegroundColor Yellow
