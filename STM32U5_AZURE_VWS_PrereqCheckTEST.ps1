@@ -243,15 +243,15 @@ function AZCLI_Login_Check()
 
         Start-Sleep -Seconds 3
         
-        & notepad "credentials.txt"
+        & notepad ".\scripts\credentials.txt"
 
         Start-Sleep -Seconds 3
 
         & az logout
 
-        & az login |  Out-String | Set-Content .\scripts\az_login.json
+        $login_info = Get-Content (& az login |  Out-String| ConvertFrom-Json)
 
-        $login_info = Get-Content .\scripts\az_login.json | Out-String | ConvertFrom-Json
+        # $login_info = Get-Content .\scripts\az_login.json | Out-String | ConvertFrom-Json
 
         if($login_info.tenantId -eq $ws_tenant_id)
         {
