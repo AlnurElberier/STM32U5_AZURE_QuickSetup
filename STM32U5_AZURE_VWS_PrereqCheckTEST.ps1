@@ -214,20 +214,18 @@ function AZCLI_Extensions_Install()
 {
     Write-Output "Installing AZ extensions"
 
-  try 
-  {
-    & az extension add --name azure-iot 
-    & az extension update --name azure-iot
-    & az extension add --name account
-    & az extension update --name account
-  }
-  catch
-  {
-    Write-Host "ERROR: Azure Command Line Extension Install Fail" -ForegroundColor Red
-    Exit 1
-  }
-
-  return 'True'
+    try 
+    {
+        & az extension add --name azure-iot 
+        & az extension update --name azure-iot
+        & az extension add --name account
+        & az extension update --name account
+    }
+    catch
+    {
+        Write-Host "ERROR: Azure Command Line Extension Install Fail" -ForegroundColor Red
+        Exit 1
+    }
 }
 
 function AZCLI_Login_Check()
@@ -263,10 +261,6 @@ function AZCLI_Login_Check()
 
         Write-Host "Configuring JSON File"  -ForegroundColor Yellow
         & python .\scripts\configureJson.py
-    }
-    else
-    {
-        return 'True'
     }
 
 }
