@@ -234,11 +234,24 @@ function AZCLI_Login_Check()
 {
     if ($WS_DATE -eq (Get-Date -UFormat "%m/%d/%y")) {
 
-        & notepad .\scripts\credentials.txt
+        Write-Output "Redirecting to a browser window to log in to Azure"
+        Start-Sleep -Seconds 1
+
+        Write-Output "Use the credential from  credentials.txt to log in to Azure"
+        Write-Output "credentials.txt will automatically open in 3 seconds"
+        Write-Output "Please return to the terminal after you login to Azure"
+
+        Start-Sleep -Seconds 3
+        
+        & notepad "credentials.txt"
+
+        Start-Sleep -Seconds 3
+
+        & az logout
 
         & az login |  Out-String | Set-Content .\scripts\az_login.json
 
-        $login_info = Get-Content .\scripts\az_login.json
+        $login_info = Get-Content .\scripts\az_login.json | Out-String | ConvertFrom-Json
 
         if($login_info.tenantId -eq $ws_tenant_id)
         {
