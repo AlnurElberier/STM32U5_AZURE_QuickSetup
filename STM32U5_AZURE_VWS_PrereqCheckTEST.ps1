@@ -249,9 +249,7 @@ function AZCLI_Login_Check()
 
         & az logout
 
-        $login_info = Get-Content (& az login |  Out-String| ConvertFrom-Json)
-
-        # $login_info = Get-Content .\scripts\az_login.json | Out-String | ConvertFrom-Json
+        $login_info = & az login |  Out-String| ConvertFrom-Json
 
         if($login_info.tenantId -eq $ws_tenant_id)
         {
