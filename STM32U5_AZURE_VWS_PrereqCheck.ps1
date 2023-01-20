@@ -1,8 +1,8 @@
 <#
 ******************************************************************************
-* @file    AzCheckPrereq.ps1
+* @file    STM32U5_AWS_VWS_PrereqCheck.ps1
 * @author  MCD Application Team
-* @brief   Check the presequists for the X-CUBE-AZURE Quick Connect scripts
+* @brief   Check the presequists for the AWS FreeRTOS iot-reference-stm32u5
 ******************************************************************************
  * Copyright (c) 2022 STMicroelectronics.
 
@@ -16,37 +16,70 @@
 ******************************************************************************
 #>
 
-$Script_Version = "1.0.0 azvws q1 2023 1"
+$Script_Version = "1.1.0 azure vws 2023"
 $copyright      = "Copyright (c) 2022 STMicroelectronics."
-$about          = "STM32U5 AWS Virtual workshop 2023 prerequisite check"
+$about          = "STM32U5 Azure Virtual Workshop 2023 prerequisite check"
 $privacy        = "The script doesn't collect or share any data"
 
-$Required_Version_STM32CubeProgrammer = "STM32CubeProgrammer v2.12.0"
-$Required_Version_Python              = "Python 3.11.1"
-$Required_Version_AZCLI               = "azure-cli                         2.40.0 *"
+$WS_DATE    = "01/19/23"
 
-$PATH_STM32CubeProgrammer_CLI        = "C:\Program Files\STMicroelectronics\STM32Cube\STM32CubeProgrammer\bin\STM32_Programmer_CLI.exe"
-$PATH_FIRMWARE                       = "C:\STM32CubeExpansion_Cloud_AZURE_V2.1.0\Projects\B-U585I-IOT02A\Applications\TFM_Azure_IoT"
-$PATH_TOOLS                          = ".\tools"
-$PATH_LOG                            = ".\log"
+$softwares =  @(
+    [pscustomobject]@{Name="Python*Core Interpreter";
+                      MinVersion=[System.Version]"3.11.1"; 
+                      Installer="python-3.11.1-amd64.exe";
+                      Argument="/passive InstallAllUsers=1 PrependPath=1 Include_test=0";
+                      URL="https://www.python.org/ftp/python/3.11.1/python-3.11.1-amd64.exe";
+                      Version="Python --version";
+                      check_path=1;}
 
-$ZIP_STM32_CUBE_PROG           = "en.stm32cubeprg-win64-v2-12-0.zip"
-$ZIP_X_CUBE_AZURE              = "en.x-cube-azure_v2-1-0.zip"
+    [pscustomobject]@{Name="Microsoft Azure CLI";
+                      MinVersion=[System.Version]"2.40.0"; 
+                      Installer="azure-cli-2.40.0.msi";
+                      Argument="/passive";
+                      URL="https://azcliprod.blob.core.windows.net/msi/azure-cli-2.40.0.msi";
+                      Version="az --version";
+                      check_path=1;}
 
-$INSTALLER_STM32_CUBE_PROG     = "SetupSTM32CubeProgrammer_win64.exe"
-$INSTALLER_PYTHON              = "python-3.11.1-amd64.exe"
-$INSTALLER_PPIP                = "get-pip.py"
+    [pscustomobject]@{Name="STM32CubeProgrammer";
+                      MinVersion=[System.Version]"2.12.0"; 
+                      Installer="SetupSTM32CubeProgrammer_win64.exe"; 
+                      URL="https://www.st.com/content/ccc/resource/technical/software/utility/group0/e4/fa/e0/4f/c4/0e/4b/41/stm32cubeprg-win64-v2-12-0/files/stm32cubeprg-win64-v2-12-0.zip/jcr:content/translations/en.stm32cubeprg-win64-v2-12-0.zip"; 
+                      ZIP="en.stm32cubeprg-win64-v2-12-0.zip"
+                      check_path=0;}
 
-$URL_LINK_STM32_CUBE_PROG = "https://www.st.com/content/ccc/resource/technical/software/utility/group0/e4/fa/e0/4f/c4/0e/4b/41/stm32cubeprg-win64-v2-12-0/files/stm32cubeprg-win64-v2-12-0.zip/jcr:content/translations/en.stm32cubeprg-win64-v2-12-0.zip"
-$URL_LINK_X_CUBE_AZURE    = "https://www.st.com/content/ccc/resource/technical/software/firmware/group1/33/52/eb/c6/5b/33/44/57/x-cube-azure_v2-1-0/files/x-cube-azure_v2-1-0.zip/jcr:content/translations/en.x-cube-azure_v2-1-0.zip"
-$URL_LINK_PYTHON          = "https://www.python.org/ftp/python/3.11.1/$INSTALLER_PYTHON"
-$URL_LINK_PIP             = "https://bootstrap.pypa.io/$INSTALLER_PPIP"
-$URL_LINK_AZCLI           = "https://azcliprod.blob.core.windows.net/msi/azure-cli-2.40.0.msi"
+    [pscustomobject]@{Name="git";
+                      MinVersion=[System.Version]"0.0.0";
+                      Installer="Git-2.39.0.2-64-bit"; 
+                      URL="https://github.com/git-for-windows/git/releases/download/v2.39.0.windows.2/Git-2.39.0.2-64-bit.exe"; 
+                      ZIP="";
+                      Version="git --version";
+                      check_path=1;}                        
+)
+
+$downloads = @(
+    [pscustomobject]@{Name="STM32CubeExpansion_Cloud_AZURE_V2.1.0";
+    Zip="en.x-cube-azure_v2-1-0.zip"
+    URL="https://stm32iot.blob.core.windows.net/firmware/en.x-cube-azure_v2-1-0.zip";
+    SRC_URL="https://www.st.com/en/embedded-software/x-cube-azure.html#get-software";
+    Destination="C:\";}    
+)
+
+$PATH_TOOLS = ".\tools"
 
 $ws_tenant_id = "aedf9cbb-56df-47c5-82a7-9a57071cab8e"
 
-$tools_path = ".\tools"
-$log_path   = ".\log"
+<# Check if PC is connected to internet #>
+function Internet_Connection_Check()
+{
+   if(!(Test-Connection -ComputerName www.st.com -Quiet))
+   {
+    Write-Host "ERROR: You are not connected to Internet. Please connect to Internet then run the script again"  -ForegroundColor Red
+    Start-Sleep -Seconds 2
+    Exit 1
+   }
+
+   Write-Host "OK : Connected to Internet"  -ForegroundColor Green
+}
 
 <# Refresh envirement variables #>
 function refresh_envirement_variables 
@@ -54,195 +87,23 @@ function refresh_envirement_variables
     $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
 }
 
-<# Check if PC is connected to internet #>
-function Internet_Connection_Check
-{
-    Write-Output "Checking Internet connection"
-
-    return Test-Connection -ComputerName www.st.com -Quiet
-}
-
 <# Check the default broswer setting #>
 function Browser_Check()
 {
+    $URL_LINK_DEFULT_SETTING       = "https://support.microsoft.com/en-us/windows/change-your-default-browser-in-windows-020c58c6-7d77-797a-b74e-8f07946c5db6"
+
     $default_browser = (Get-ItemProperty HKCU:\Software\Microsoft\Windows\Shell\Associations\UrlAssociations\http\UserChoice -Name ProgId).ProgId
 
-    if(($default_browser -eq "MSEdgeHTM") -or ($default_browser -eq "ChromeHTML") )
+    if(!(($default_browser -eq "MSEdgeHTM") -or ($default_browser -eq "ChromeHTML")) )
     {
-        #Write-Output "Microsoft Edge or Chrome set as default browswer"
-
-        return "True"
+        
+        Write-Host "ERROR : Please set Chrome or Edge as Browswer"   -ForegroundColor Red
+        Start-Sleep -Seconds 2
+        Start-Process $URL_LINK_DEFULT_SETTING
+        Exit 1
     }
 
-    #Write-Host "Browswer set to $default_browser"
-
-    return "False"
-}
-
-
-<# Create tools directory #>
-function ToolsDir_Create()
-{
-  If(!(test-path -PathType container $tools_path))
-  {
-      New-Item -ItemType Directory -Path $tools_path
-  }
-
-  If(!(test-path -PathType container $log_path))
-  {
-      New-Item -ItemType Directory -Path $log_path
-  }
-}
-
-function Cleanup()
-{
-    Remove-Item $PATH_TOOLS -Recurse -Force
-    Remove-Item $PATH_LOG   -Recurse -Force
-}
-
-<# Clone iot-reference-stm32u5 #>
-function FIRMWARE_Install()
-{
-    $downloadsFolder    = (Get-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders").PSObject.Properties["{374DE290-123F-4565-9164-39C4925E467B}"].Value
-    $firmware_zip       = "$downloadsFolder\$ZIP_X_CUBE_AZURE"
-
-    if (!(Test-Path $firmware_zip))
-    {
-        Write-Host "Downloading $ZIP_X_CUBE_AZURE"
-        Start-Process -Wait $URL_LINK_X_CUBE_AZURE
-
-        while (!(Test-Path "$firmware_zip")) 
-        {
-             Start-Sleep 10 
-        }
-
-        Write-Host "Extracting $ZIP_X_CUBE_AZURE"
-        Expand-Archive "$firmware_zip" "C:\"
-
-        Write-Output "STM32CubeExpansion_Cloud_AZURE_V2.1.0 exist" | Green
-    }
-
-}
-
-<# Check iot-reference-stm32u5 is installed #>
-function FIRMWARE_Check()
-{
-    if (Test-Path -Path $PATH_FIRMWARE)
-    {
-        Write-Output "STM32CubeExpansion_Cloud_AZURE_V2.1.0 exist" | Green
-
-        return 'True'
-    }
-
-    FIRMWARE_Install
-
-    return "False"
-}
-
-<# Install AZCLI extensions #>
-function AZCLI_Extensions_Install()
-{
-    Write-Output "Installing AZ extensions"
-
-  try 
-  {
-    & az extension add --name azure-iot 
-    & az extension update --name azure-iot
-    & az extension add --name account
-    & az extension update --name account
-  }
-  catch
-  {
-    return 'False'
-  }
-
-  return 'True'
-}
-
-<# Locgin to Azure account #>
-function AZCLI_Login()
-{
-    Write-Output "Redirecting to a browser window to log in to Azure"
-    Start-Sleep -Seconds 1
-
-    Write-Output "Use the credential from  credentials.txt to log in to Azure"
-    Write-Output "credentials.txt will automatically open in 3 seconds"
-    Write-Output "Please return to the terminal after you login to Azure"
-
-    Start-Sleep -Seconds 3
-    
-    & notepad "credentials.txt"
-
-    Start-Sleep -Seconds 3
-
-    #Logout from Azure
-   & az logout
-
-   #Login to Azure
-   & az login  |  Out-String | Set-Content $log_path\az_login.json
-
-   $login_info = Get-Content $log_path\az_login.json | Out-String | ConvertFrom-Json
-   
-   if($login_info.tenantId -eq $ws_tenant_id)
-   {
-    return 'True'
-   }
-   
-   return 'Falase'
-}
-
-<# Install Python #>
-function AZCLI_Install()
-{
-    Write-Output "Installing $Required_Version_AZCLI"
-
-    Start-Sleep -Seconds 3
-
-    $azcli_installer = "$tools_path\azure-cli-2.40.0.msi"
-
-    if (!(Test-Path $azcli_installer))
-    {
-      Write-Output "Downloading AZCLI"
-      Import-Module BitsTransfer
-      Start-BitsTransfer -Source $URL_LINK_AZCLI -Destination $azcli_installer
-    }
-    
-    Start-Process -Wait -FilePath  $azcli_installer
-
-    # Refresh envirement variables
-    refresh_envirement_variables
-}
-
-<# Check if AZCLI is installed #>
-function AZCLI_Check()
-{
-    Try
-    {
-        $azcli_version = & az --version
-
-        if(!$azcli_version)
-        {
-            Write-Output "AZCLI not installed"
-            AZCLI_Install
-
-            return 'True'
-        }
-
-        if($azcli_version -like $Required_Version_AZCLI)
-        {
-            Write-Output "AZCLI $Required_Version_AZCLI installed"
-            return 'True'
-        }
-
-        return 'False'
-    }
-    Catch
-    {
-        Write-Output "AZCLI not installed"
-        AZCLI_Install
-    }
-
-    return 'True'
+    Write-Host "OK : Microsoft Edge or Chrome set as default browswer"  -ForegroundColor Green
 }
 
 <# Install Python modules #>
@@ -250,23 +111,26 @@ function Python_Modules_Install()
 {
     Write-Host "Installing Python libraries"
 
-    & python -m pip install pyserial
+    & python -m pip install -r requirements.txt
 }
 
 <# Install Python #>
 function Python_Pip_Check()
 {
+    $PIP_INSTALLER = "get-pip.py"
+    $PIP_URL_LINK  = "https://bootstrap.pypa.io/get-pip.py"
+
     $pip_version = & python -m pip --version
 
     if(!$pip_version)
     {
-      $pip_installer = "$PATH_TOOLS\$INSTALLER_PPIP"
+      $pip_installer = "$PATH_TOOLS\$PIP_INSTALLER"
 
       if (!(Test-Path $pip_installer))
       {
         Write-Host "Downloading pip"
         Import-Module BitsTransfer
-        Start-BitsTransfer -Source $URL_LINK_PIP -Destination $pip_installer
+        Start-BitsTransfer -Source $PIP_URL_LINK -Destination $pip_installer
       }
     
       Write-Host "Installing pip"
@@ -276,135 +140,129 @@ function Python_Pip_Check()
     }
     else 
     {
-        Write-Output "pip installed"
+        Write-Host "OK : Pip installed"  -ForegroundColor Green
     }
 }
 
-<# Install Python #>
-function Python_Install()
+function Get-SoftwareInfo($program)
 {
-    Start-Sleep -Seconds 3
+	$InstalledSoftware = (Get-ChildItem HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\ | Get-ItemProperty)
 
-    $python_installer = "$tools_path\python-3.10.7-amd64.exe"
-
-    if (!(Test-Path $python_installer))
+	IF (Test-path HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\) 
     {
-        Write-Output "Downloading $Required_Version_Python"
-        Import-Module BitsTransfer
-        Start-BitsTransfer -Source $URL_LINK_PYTHON -Destination $python_installer
+		$InstalledSoftware += (Get-ChildItem HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\ | Get-ItemProperty)
+	}
+
+	IF (Test-path HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\) 
+    {
+	    $InstalledSoftware += (Get-ChildItem HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\ | Get-ItemProperty) 
+    }
+	
+    #($InstalledSoftware | Where-Object {$_.DisplayName -like '*'+$program+'*'}) | Select-Object -Property  DisplayName, DisplayVersion | Sort-Object -Property DisplayName
+    return ($InstalledSoftware | Where-Object {$_.DisplayName -like '*'+$program+'*'}) | Select-Object -Property  DisplayName, DisplayVersion
+}
+
+function Get-SoftwareInstaller($software)
+{
+    if($software.ZIP)
+    {
+        $zip_file =  $PATH_TOOLS+"\"+$software.ZIP
+
+        if (!(Test-Path $zip_file))
+        {
+            Write-Host "Downloading : "$software.ZIP
+            Invoke-WebRequest $software.URL -OutFile $zip_file
+        }
+
+        $installer = "$PATH_TOOLS\"+$software.Installer
+
+        if (!(Test-Path $installer))
+        {
+            Write-Host "Extracting : " $software.ZIP
+            Expand-Archive "$zip_file" "$PATH_TOOLS"
+        }
+    }
+    else
+    {
+        $installer = "$PATH_TOOLS\"+$software.Installer
+
+        if (!(Test-Path $installer))
+        {
+          Write-Host "Downloading : "$software.Installer
+          Invoke-WebRequest $software.URL -OutFile $installer
+        }
     }
 
-    Write-Output "Installing $Required_Version_Python"
-    Start-Process -Wait -FilePath  $python_installer -ArgumentList "/passive InstallAllUsers=1 PrependPath=1 Include_test=0"
+    Write-Host "Installing : " $software.Installer
+
+    if($software.Argument)
+    {
+       Start-Process -Wait -FilePath  $installer $software.Argument
+    }
+    else
+    {
+        Start-Process -Wait -FilePath  $installer
+    }
+    
 
     # Refresh envirement variables
     refresh_envirement_variables
 }
 
-<# Check if Python is installed #>
-function Python_Check()
+<# Install AZCLI extensions #>
+function AZCLI_Extensions_Install()
 {
-    Try
+    Write-Output "Installing AZ extensions"
+
+    try 
     {
-        $python_version = & python --version
+        & az extension add --name azure-iot 
+        & az extension update --name azure-iot
+        & az extension add --name account
+        & az extension update --name account
+    }
+    catch
+    {
+        Write-Host "ERROR: Azure Command Line Extension Install Fail" -ForegroundColor Red
+        Exit 1
+    }
+}
 
-        if(!$python_version)
+function AZCLI_Login_Check()
+{
+    if ($WS_DATE -eq (Get-Date -UFormat "%m/%d/%y")) {
+
+        Write-Output "Redirecting to a browser window to log in to Azure"
+        Start-Sleep -Seconds 1
+
+        Write-Output "Use the credential from  credentials.txt to log in to Azure"
+        Write-Output "credentials.txt will automatically open in 3 seconds"
+        Write-Output "Please return to the terminal after you login to Azure"
+
+        Start-Sleep -Seconds 3
+        
+        & notepad ".\scripts\credentials.txt"
+
+        Start-Sleep -Seconds 3
+
+        & az logout
+
+        $login_info = & az login |  Out-String| ConvertFrom-Json
+
+        if($login_info.tenantId -eq $ws_tenant_id)
         {
-            Write-Output "Python not installed"
-            Python_Install
-
-            return 'True'
+            Write-Host "OK :Azure Command Line Login Successful"  -ForegroundColor Green
+        }
+        else 
+        {
+            Write-Host "ERROR: Azure Login Failed" -ForegroundColor Red
+            Exit 1
         }
 
-        if($python_version -like $Required_Version_Python)
-        {
-            return 'True'
-        }
-
-        return 'False'
-    }
-    Catch
-    {
-        Write-Output "Python not installed"
-        Python_Install
+        Write-Host "Configuring JSON File"  -ForegroundColor Yellow
+        & python .\scripts\configureJson.py
     }
 
-    return 'True'
-}
-
-<# Install STM32CubeProgrammer #>
-function STM32CubeProg_Install()
-{
-    $downloadsFolder    = (Get-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders").PSObject.Properties["{374DE290-123F-4565-9164-39C4925E467B}"].Value
-    $cubeprog_zip = "$downloadsFolder\$ZIP_STM32_CUBE_PROG"
-
-    if (!(Test-Path $cubeprog_zip))
-    {
-        Write-Host "Downloading $ZIP_STM32_CUBE_PROG"
-        Start-Process -Wait $URL_LINK_STM32_CUBE_PROG
-
-        while (!(Test-Path "$cubeprog_zip")) 
-        {
-             Start-Sleep 10 
-        }
-    }
-
-    $cubeprog_installer = "$PATH_TOOLS\$INSTALLER_STM32_CUBE_PROG"
-
-    if (!(Test-Path $cubeprog_installer))
-    {
-        Write-Host "Extracting $ZIP_STM32_CUBE_PROG"
-        Expand-Archive "$cubeprog_zip" "$PATH_TOOLS"
-    }
-
-    Write-Host "Installing $Required_Version_STM32CubeProgrammer"
-
-    Start-Process -Wait -FilePath  $cubeprog_installer
-
-    # Refresh envirement variables
-    refresh_envirement_variables  
-}
-
-<# Check STM32CubeProgrammer is installed #>
-function STM32CubeProg_Check()
-{
-    if (Test-Path -Path $PATH_STM32CubeProgrammer_CLI)
-    {
-        Write-Output "STM32CubeProgrammer exist"
-      & $PATH_STM32CubeProgrammer_CLI "--version" |  Out-String | Set-Content $PATH_LOG\STM32CubeProgrammer_version.txt
-
-      foreach($line in Get-Content $PATH_LOG\STM32CubeProgrammer_version.txt) 
-      {
-        if($line -match $regex)
-        {
-            if ($line.Contains($Required_Version_STM32CubeProgrammer))
-            {
-                return "True"
-            }
-        }
-      }
-
-      return 'False'
-    }
-
-    STM32CubeProg_Install
-
-     return "True"
-}
-
-function Green
-{
-    process { Write-Host $_ -ForegroundColor Green }
-}
-
-function Red
-{
-    process { Write-Host $_ -ForegroundColor Red }
-}
-
-function White
-{
-    process { Write-Host $_ -ForegroundColor White }
 }
 
 <#######################################################  
@@ -414,120 +272,120 @@ function White
 ########################################################>
 Clear-Host
 
-
-Write-Output "Script version: $Script_Version"   | Green
-Write-Output "$copyright"
-Write-Output "$about"
-Write-Output "$privacy"
+Write-Host "Script version: $Script_Version"  -ForegroundColor Green
+Write-Host "$copyright"
+Write-Host "$about"
+Write-Host "$privacy"
 
 # Refresh envirement variables
 refresh_envirement_variables
 
-# Check if PC is connected to Internet
-$connection_status = Internet_Connection_Check
+# Check if connected to Internet
+Internet_Connection_Check
 
-if(!($connection_status -like 'True'))
+# Check if default browser is Edge or Chrome
+Browser_Check
+
+# Create tools dir
+If(!(test-path -PathType container $PATH_TOOLS))
 {
-    Write-Output "You are not connected to Internet. Please connect to Internet and run the script again" | Red
-    Start-Sleep -Seconds 2
-    Exit 1
+    New-Item -ItemType Directory -Path $PATH_TOOLS
 }
 
-Write-Output "You are connected to Internet."  | Green
-
-# Check default browser
-$browser_status = Browser_Check
-
-if(!($browser_status -like 'True'))
+# Check required software tools
+foreach($software in $softwares)
 {
-    Write-Output "Please set Microsoft Edge or Chrome as default browswer then run the script again" | Red
-    Start-Sleep -Seconds 2
-    Start-Process $URL_LINK_DEFULT_SETTING
-    Exit 1
+    $version = Get-SoftwareInfo $software.Name
+
+    if($null -eq $version)
+    {
+        Write-Host $software.Name not installed  -ForegroundColor Yellow
+
+        Get-SoftwareInstaller $software
+    }
+
+    if($version.Count)
+    {
+        Write-Host "ERROR: Multiple versions of " $software.Name " instelled"  -ForegroundColor Red
+    }
+
+    foreach($v in $version)
+    {
+        $sv = [System.Version]$v.DisplayVersion
+
+        if($software.MinVersion -le $sv)
+        {
+            Write-Host "OK :" $v.DisplayName : $sv -ForegroundColor Green
+            
+            if($software.check_path)
+            {
+              $cmd = $software.Version
+              $version = $cmd
+
+              if(!$version)
+              {
+                  Write-Host "ERROR:" $v.DisplayName " not added to path"  -ForegroundColor Red
+                  Write-Host "Please uninstall " $v.DisplayName " and run the script again"  -ForegroundColor Red
+                  Exit 1
+              }
+
+              Write-Host "OK :" $v.DisplayName " added to path"  -ForegroundColor Green
+            }
+        }
+        else 
+        {
+            Write-Host "ERROR: " $v.DisplayName : $sv ". Please uninstall " $v.DisplayName " and run the script again" -ForegroundColor Red
+            
+            Exit 1
+        }
+    }
 }
 
-Write-Output "Default browswer OK"   | Green
-
-# Create tools directory
-$value = ToolsDir_Create
-
-# Check if X-CUBE-AZURE is installed
-$value = FIRMWARE_Check
-
-# Check if STM32CubeProg_Check is installed
-$value = STM32CubeProg_Check
-
-if(!($value -like 'True'))
-{
-    Write-Output "STM32CubeProgrammer version error"  | Red
-    Write-Output "Required version : $Required_Version_STM32CubeProgrammer"
-    Write-Output "please Uninstall STM32CubeProgrammer and run the script again"
-
-    Start-Sleep -Seconds 5
-    Exit 1
-}
-
-Write-Output "STM32CubeProgrammer version OK"   | Green
-
-$value = Python_Check
-
-if(!($value -like 'True'))
-{
-    Write-Output "Python version error"  | Red
-    Write-Output "Required version : $Required_Version_Python"
-    Write-Output "please Uninstall Python and run the script again"
-
-    Start-Sleep -Seconds 5
-    Exit 1
-}
-
-Write-Output "Python version OK"   | Green
-
+# Check if pip is installed
 Python_Pip_Check
 
+# Install Python modules
 Python_Modules_Install
 
-$value = AZCLI_Check
+# Install Azure CLI Extensions
+AZCLI_Extensions_Install
 
-if(!($value -like 'True'))
+
+# Clone the repos
+foreach($download in $downloads)
 {
-    Write-Output "AZCLI version error"  | Red
-    Write-Output "Required version : $Required_Version_AZCLI"
-    Write-Output "please Uninstall AZCLI and run the script again"
+    $PATH_FIRMWARE= $download.Destination+$download.Name
+    $PATH_DOWNLOAD=  $PATH_TOOLS+"\"+$download.Zip
 
-    Start-Sleep -Seconds 5
-    Exit 1
+    if (!(Test-Path -Path "$PATH_FIRMWARE"))
+    {
+        if (!(Test-Path -Path "$PATH_DOWNLOAD")) {
+            Write-Host "Downloading " $download.Name  -ForegroundColor Yellow
+            Invoke-WebRequest $download.URL -OutFile $PATH_DOWNLOAD
+        }
+        
+
+        if (Test-Path -Path "$PATH_DOWNLOAD") {
+            Write-Host "Extracting " $download.Name " to " $download.destination -ForegroundColor Yellow
+            Expand-Archive "$PATH_DOWNLOAD"  -DestinationPath $download.destination
+        }
+        else 
+        {
+            Write-Host "ERROR: " $download.Name " Download ERROR. Please downlaod the file manually, and extract to your C: drive." -ForegroundColor Red
+            Start-Process $download.SRC_URL
+            Exit 1
+        }
+
+    }
+    else 
+    {
+        Write-Host "OK :" $download.Name  -ForegroundColor Green
+    }   
 }
 
-Write-Output "AZCLI version OK" | Green
+#Attempt to login and check credentials
+AZCLI_Login_Check
 
-$value = AZCLI_Extensions_Install
-
-if(!($value -like 'True'))
-{
-    Write-Output "Issue installing AZ extensions"  | Red
-    Start-Sleep -Seconds 5
-    Exit 1
-}
-
-Write-Output "System check successful" | Green
-Exit 0
-
-# Locgin to Azure account
-$value = AZCLI_Login
-
-if(!($value -like 'True'))
-{
-    Write-Output "AZCLI login error. Please run the script again and try to login again"   | Red
-
-    Start-Sleep -Seconds 5
-    Exit 1
-}
-
-Write-Output "Successful AZ login" | Green
-
-& python .\scripts\configureJson.py
-
-Start-Process $PATH_FIRMWARE
+Write-Host "OK : System check successful !"  -ForegroundColor Green
 
 Exit 0
