@@ -251,7 +251,7 @@ function AZCLI_Login_Check()
 
         if($login_info.tenantId -eq $ws_tenant_id)
         {
-            Write-Host "OK :Azure Command Line Login Successful"  -ForegroundColor Green
+            Write-Host "OK : Azure Command Line Login Successful"  -ForegroundColor Green
         }
         else 
         {
