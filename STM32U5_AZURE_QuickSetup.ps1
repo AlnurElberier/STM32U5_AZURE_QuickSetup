@@ -388,4 +388,6 @@ AZCLI_Login_Check
 
 Write-Host "OK : System check successful !"  -ForegroundColor Green
 
+& start "C:\STM32CubeExpansion_Cloud_AZURE_V2.1.0\Projects\B-U585I-IOT02A\Applications\TFM_Azure_IoT\AzureScripts"
+
 Exit 0
