@@ -1,12 +1,13 @@
-# STM32U5 Azure Virtual Workshop 2023
+# STM32U5 Azure Quick Setup
 
 ## 1- Introduction
-Welcome to the STM32U5 Azure Virtual workshop.
-To ensure that everything runs smoothly on the day of the workshop, it is recommended that you follow all installation steps before the workshop, ideally a week in advance.
+Welcome to the STM32U5 Azure Quick Setup.
+
+To ensure that [X-CUBE-AZURE](https://www.st.com/en/embedded-software/x-cube-azure.html) runs smoothly, it is recommended that you follow all the Quick Setup steps bellow.
 
 This process may take between 15mn to 1 hours to complete depending on your system and Internet speed.
 
-If you have any question or need support ahead of the workshop, please contact our support line. The details are provided at the end of this document.
+If you have any question or need support, please contact our support line. The details are provided at the end of this document.
 
 ## 2- Important
 You need to have administration rights on your PC to be able to install drivers and software and to do the workshop.
@@ -47,11 +48,9 @@ We recommend a fresh Windows install, if that is not possible, try to run Window
 
 
 ## 7- Prepare your system
-To ensure that everything runs smoothly on the day of the workshop, it is recommended that you follow all installation steps before the workshop, ideally a week+ in advance. The procedure depends on the operating system and could take between 15mn to 1h to complete. 
+To ensure that everything runs smoothly on the day of the workshop, it is recommended that you follow all installation steps in advance. The procedure could take between 15mn to 1h to complete. 
 
-The instructions on setting up your Windows machine are described in this video.
-
-The instructions below are the same as in the video.
+The instructions on setting up your Windows machine are described in this [video]().
 
 ### 7.1- Install Git
 
@@ -59,7 +58,7 @@ Download Git for your platform from the [official website](https://git-scm.com/d
 
 ### 7.2- Clone the workshop repo
 ```
-git clone https://github.com/AlnurElberier/STM32U5_AZURE_Virtual_Workshop_2023.git
+git clone https://github.com/AlnurElberier/STM32U5_AZURE_QuickSetup.git
 ```
 
 ### 7.3- Configure **PowerShell**
@@ -85,7 +84,7 @@ Enter **y** to accept the Execution Policy Change
 
 Navigate to the directory where you have cloned this repo to. 
 ```
-cd C:\<Your directory>\STM32U5_AZURE_Virtual_Workshop_2023
+cd C:\<Your directory>\STM32U5_AZURE_QuickSetup
 ```
 
 ![Navigate](./assets/Navigate.jpg)
@@ -93,16 +92,16 @@ cd C:\<Your directory>\STM32U5_AZURE_Virtual_Workshop_2023
 
 ### 7.5- Execute the script
 
-Type .\STM32U5_AZURE_VWS_PrereqCheck.ps1 to run the prerequisite check script
+Type .\STM32U5_AZURE_QuickSetup.ps1 to run the prerequisite check script
 
 ```
-.\STM32U5_AZURE_VWS_PrereqCheck.ps1
+.\STM32U5_AZURE_QuickSetup.ps1
 ```
 
 ![RunScript](./assets/RunScript.jpg)
 
 ### 7.6 Script flow
-STM32U5_AZURE_VWS_PrereqCheck programmatically installs all the software requirements to ensure that your environment is prepared for the workshop.
+STM32U5_AZURE_QuickSetup programmatically installs all the software requirements to ensure that your environment is prepared for the workshop.
 
 The flow is detailed here:
 ![Flow](./assets/flow.jpg)
