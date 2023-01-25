@@ -324,12 +324,12 @@ foreach($software in $softwares)
 
               if(!$version)
               {
-                  Write-Host "ERROR:" $v.DisplayName " not added to path"  -ForegroundColor Red
+                  Write-Host "ERROR: " $v.DisplayName " not added to path"  -ForegroundColor Red
                   Write-Host "Please uninstall " $v.DisplayName " and run the script again"  -ForegroundColor Red
                   Exit 1
               }
 
-              Write-Host "OK :" $v.DisplayName " added to path"  -ForegroundColor Green
+              Write-Host "OK : " $v.DisplayName " added to path"  -ForegroundColor Green
             }
         }
         else 
@@ -379,7 +379,7 @@ foreach($download in $downloads)
     }
     else 
     {
-        Write-Host "OK :" $download.Name  -ForegroundColor Green
+        Write-Host "OK : " $download.Name  -ForegroundColor Green
     }   
 }
 

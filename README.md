@@ -1,9 +1,9 @@
-# STM32U5 Azure Quick Setup
+# STM32U5 Azure Virtual Workshop 
 
 ## 1- Introduction
-Welcome to the STM32U5 Azure Quick Setup.
+Welcome to the STM32U5 Azure Virtual Workshop.
 
-To ensure that [X-CUBE-AZURE](https://www.st.com/en/embedded-software/x-cube-azure.html) runs smoothly, it is recommended that you follow all the Quick Setup steps bellow.
+To ensure that [X-CUBE-AZURE](https://www.st.com/en/embedded-software/x-cube-azure.html) runs smoothly, it is recommended that you follow all the setup steps below.
 
 This process may take between 15mn to 1 hours to complete depending on your system and Internet speed.
 
@@ -23,18 +23,19 @@ You need to have administration rights on your PC to be able to install drivers 
 * Windows PC
 * 2.4 GHz Wi-Fi router (No captive portal)
 
+Note: For machines with USB Type C, please have a Type C to Type A adapter
+
+
 ## 5- Minimum Recommended Hardware Requirements for PC
-* Type A USB port
 * 2+ GHz processor
 * 4 GB of system memory (RAM)
 * 10 GB of available disk space
 
-Note: For machines with USB Type C, please have a Type A to Type C adapter
 
 ## 6- Software Requirements
-You need a Windows PC with administration rights to be able to install drivers and software and to do the workshop. 
+You need a Windows PC with administration rights to be able to install drivers and software requirements listed below. 
 
-We recommend a fresh Windows install, if that is not possible, try to run Windows sandbox or a virtual machine. It will be hard for us to debug system issues remotely.
+We recommend a fresh Windows install, if that is not possible, try to run Windows sandbox or a virtual machine.
 
 | Software                | Version   | Description                                                            |
 | ----------------------- | --------- |----------------------------------------------------------------------- |
@@ -43,12 +44,11 @@ We recommend a fresh Windows install, if that is not possible, try to run Window
 | X-CUBE-AZURE            | 2.1.0     | Integrate modular Azure RTOS kernel and libraries with hardware enforced security to build more secure cloud connected applications |
 | Python with Pip         | 3.11.1    | A general-purpose programming language                                 |
 | Azure CLI               | 2.40.0    | A tool that pulls all the Azure services together in one central command line interface |
-| Edge or Chrome          |           | Web browser                                                            |
-| WebEx Application       |           | Video Conference tool used for specific questions on the day of the session |
+| Edge or Chrome          |           | Web browser || 
 
 
 ## 7- Prepare your system
-To ensure that everything runs smoothly on the day of the workshop, it is recommended that you follow all installation steps in advance. The procedure could take between 15mn to 1h to complete. 
+To ensure that everything runs smoothly, it is recommended that you follow all installation steps prior to the workshop. The procedure can take between 15mn to 1h to complete. 
 
 The instructions on setting up your Windows machine are described in this [video]().
 
@@ -58,7 +58,7 @@ Download Git for your platform from the [official website](https://git-scm.com/d
 
 ### 7.2- Clone the workshop repo
 ```
-git clone https://github.com/AlnurElberier/STM32U5_AZURE_QuickSetup.git
+git clone https://github.com/stm32-hotspot/STM32U5_Azure_Virtual_Workshop.git
 ```
 
 ### 7.3- Configure **PowerShell**
@@ -84,7 +84,7 @@ Enter **y** to accept the Execution Policy Change
 
 Navigate to the directory where you have cloned this repo to. 
 ```
-cd C:\<Your directory>\STM32U5_AZURE_QuickSetup
+cd C:\<Your directory>\STM32U5_Azure_Virtual_Workshop
 ```
 
 ![Navigate](./assets/Navigate.jpg)
@@ -92,16 +92,16 @@ cd C:\<Your directory>\STM32U5_AZURE_QuickSetup
 
 ### 7.5- Execute the script
 
-Type .\STM32U5_AZURE_QuickSetup.ps1 to run the prerequisite check script
+Type .\STM32U5_Azure_VWS_PrereqCheck.ps1 to run the prerequisite check script
 
 ```
-.\STM32U5_AZURE_QuickSetup.ps1
+.\STM32U5_Azure_VWS_PrereqCheck.ps1
 ```
 
 ![RunScript](./assets/RunScript.jpg)
 
 ### 7.6 Script flow
-STM32U5_AZURE_QuickSetup programmatically installs all the software requirements to ensure that your environment is prepared for the workshop.
+STM32U5_Azure_VWS_PrereqCheck.ps1 programmatically installs all the software requirements to ensure that your environment is prepared for the workshop.
 
 The flow is detailed here:
 ![Flow](./assets/flow.jpg)
