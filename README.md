@@ -20,8 +20,10 @@
     - stm32u585@outlook.com
   - Azure Password
     - XXXXXXXXXXXXXXXXXXXXX
+  - Serial Monitor
+    - https://serial.huhn.me/
   - Web-App
-    - vws-webapp.azurewebsites.net
+    - https://vws-webapp.azurewebsites.net
   - SQL Database Username
     - vws
   - SQL Database Password
@@ -48,8 +50,5 @@
     WHERE
       IoTHub.ConnectionDeviceId = '<board-name>'
     ```
-
-  - Serial Monitor
-    - https://serial.huhn.me/
 
 
