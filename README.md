@@ -52,7 +52,7 @@
       CAST(humidity AS bigint) as humidity,
       System.Timestamp() as timestamp
     INTO
-      <board-name>
+      <table-name>
     FROM
       vwsIotHub
     WHERE
