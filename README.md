@@ -1,18 +1,50 @@
-# ATTENTION:
+# Virtual Workshop Hands-On :
 
-## This Repositiory has been migrated to:  
+## Agenda:  
 
-  ## https://github.com/stm32-hotspot/STM32U5_Azure_Virtual_Workshop
+   1. Quick connect to Iot-Hub
+   2. Visualize sensor data in web-app
+   3. Build new firmware image in Cube-IDE
+   4. Create a new table in azure sql database
+   5. Create an azure stream analytics job to forward sensor data to your table
+   6. Complete Azure Device Update
 
-##  Please refer to the **updated prerequisite check** [video](https://www.youtube.com/watch?v=6_KjWD8Nc20)
 
-#
+## Useful Content:
 
-### Questions and support ahead of the workshop
+  - Azure Username
+    - stm32u585@outlook.com
+  - Azure Password
+    - XXXXXXXXXXXXXXXXXXXXX
+  - Web-App
+    - vws-webapp.azurewebsites.net
+  - SQL Database Username
+    - vws
+  - SQL Database Password
+    - XXXXXXXXXX
+  - Create Table
+    ```
+    CREATE TABLE <boardname> (
+      id INT PRIMARY KEY IDENTITY (1, 1),
+      temperature int NOT NULL,
+      humidity int NOT NULL,
+      timestamp DATETIME
+    ```
+  - Create an ASA job
+    ```
+    SELECT
+      CAST(temperature AS bigint) as temperature,
+      CAST(humidity AS bigint) as humidity,
+      System.Timestamp() as timestamp
+    INTO
+      <board-name>
+    FROM
+      vwsIotHub
+    WHERE
+      IoTHub.ConnectionDeviceId = '<board-name>'
+    ```
 
--	If you have issues during the software download and install, please contact ST by entering an Online Support Request at: https://community.st.com/s/onlinesupport?o=ws&tabset-08cae=2 
-to help resolve the issue.
+  - Serial Monitor
+    - https://serial.huhn.me/
 
--	When entering the support request, in the Subject field please fill with: “STM32U5 Azure Virtual workshop”.
 
-To ensure your request is quickly routed to the correct support team, please indicate the Workshop Request Type, Technical or Non-Technical, that best describes your question.
