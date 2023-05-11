@@ -23,7 +23,9 @@
   - Serial Monitor
     - https://serial.huhn.me/
   - Web-App
-    - https://vws-webapp.azurewebsites.net
+    - https://vws-webapp.azurewebsites.net 
+  - Resource Group
+    - https://portal.azure.com/#@iotcloudservicesst.onmicrosoft.com/resource/subscriptions/52c2cfbe-e2e2-4bf4-a5ea-bc166f9fc637/resourceGroups/vws-rg/overview
   - SQL Database Username
     - vws
   - SQL Database Password
