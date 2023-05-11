@@ -30,6 +30,8 @@
     - <Paste-revision-here>
   - Resource Group
     - https://portal.azure.com/#@iotcloudservicesst.onmicrosoft.com/resource/subscriptions/52c2cfbe-e2e2-4bf4-a5ea-bc166f9fc637/resourceGroups/vws-rg/overview
+  - Display MQTT Messages
+      - az iot hub monitor-events -n vws-IotHub --device-id [Paste-device-name]
   - SQL Database Username
     - vws
   - SQL Database Password
