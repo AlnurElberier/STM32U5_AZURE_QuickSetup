@@ -12,6 +12,10 @@
 
 ## Useful Content:
 
+  - Command
+    ```
+    .\STM32U5_AZ_Setup.ps1 aedf9cbb-56df-47c5-82a7-9a57071cab8e -config true
+    ```
   - Azure Username
     - stm32u585@outlook.com
   - Azure Password
@@ -29,6 +33,7 @@
       temperature int NOT NULL,
       humidity int NOT NULL,
       timestamp DATETIME
+    );
     ```
   - Create an ASA job
     ```
