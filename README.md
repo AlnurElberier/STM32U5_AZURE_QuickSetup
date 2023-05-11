@@ -22,6 +22,8 @@
     - XXXXXXXXXXXXXXXXXXXXX
   - Serial Monitor
     - https://serial.huhn.me/
+  - Board Name
+    - <Paste-name-here>
   - Web-App
     - https://vws-webapp.azurewebsites.net 
   - Resource Group
@@ -30,6 +32,8 @@
     - vws
   - SQL Database Password
     - XXXXXXXXXX
+  - Table Name
+    - <Paste-name-here>
   - Create Table
     ```
     CREATE TABLE <boardname> (
