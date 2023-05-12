@@ -21,7 +21,7 @@
   - Azure Password
     - XXXXXXXXXXXXXXXXXXXXX
   - Serial Monitor
-    - https://serial.huhn.me/
+    - https://googlechromelabs.github.io/serial-terminal/
   - Board Name
     - <Paste-name-here>
   - Web-App
